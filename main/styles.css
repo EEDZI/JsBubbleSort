@@ -5,20 +5,56 @@
 
 h1, h2 {
     font-family: 'Courier New', monospace;
-    color: #333;
+    color: white;
 }
+
+body {
+    background-color: #21142cf5;
+    color:white;
+    font-family: 'Courier New', monospace;
+}
+
 main {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
     justify-self: center;
     align-self: center;
-
+    width: 85%;
 }
 .generate-number {
+    border: none;
     font-size: 1.2rem;
     font-family: 'Courier New', monospace;
     font-weight: 600;
-    background: #a3ff8b;
+    background: #77ff55;
     padding: 10px;
+}
+.sort-button {
+    border: none;
+    font-size: 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    background: #77ff55;
+    padding: 10px;
+    margin: 50px;
+}
+
+.array-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-block: 15%;
+    border: #21142cf5;
+}
+
+.array-element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: #c5c5c5 2px dotted;
+    padding: 80px;
+    border-radius: 350px;
 }
