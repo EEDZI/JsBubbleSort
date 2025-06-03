@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Title</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body id="app">
+    <main>
+        <section>
+            <h1>Bubble Sort</h1>
+            <h1>{{ randomArray }}</h1>
+        </section>
+
+        <section>
+            <button @click="randomNum" class="generate-number">Generate Random Numbers</button>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                   randomArray: [],
+                };
+            },
+
+            methods: { 
+                // Bubble Sort algorithm
+                bubbleSort() {
+                    let array = this.randomArray.slice();
+                    let len = arr.length;
+                    let swapped;
+
+                    for(a in Range (len-1)) {
+                        for(let j = 0; j < len - a - 1; j++) {
+                            swapped = false;
+                            if(arr[j] > arr[j + 1]){
+                                let temp = arr[j];
+                                arr[j] = arr[j + 1];
+                                arr[j + 1] = temp;
+                                swapped = true;
+                                console.log(arr);
+                            }
+                        }
+                        // If no two elements were swapped by inner loop, then break
+                        if (!swapped) {
+                            break;
+                        }    
+                    }
+                },
+
+                // Generate an array of random numbers between 1 and 50
+                randomNum() {
+                    this.randomArray = [];
+                    while (this.randomArray.length < 6) {
+                        let random = Math.floor(Math.random() * 50) + 1;
+                        this.randomArray.push(random);
+                    }
+                    console.log(this.randomArray);
+                    bubbleSort();
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

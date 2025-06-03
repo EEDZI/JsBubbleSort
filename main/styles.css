@@ -1,0 +1,24 @@
+:root{
+    font-size: 18px;
+
+}
+
+h1, h2 {
+    font-family: 'Courier New', monospace;
+    color: #333;
+}
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    justify-self: center;
+    align-self: center;
+
+}
+.generate-number {
+    font-size: 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    background: #a3ff8b;
+    padding: 10px;
+}
