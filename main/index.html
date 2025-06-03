@@ -5,37 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bubble Sort!</title>
-    <!-- <link rel="stylesheet" href="styles.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        corrier: ['"Courier New"', 'Courier', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-
-<body id="app" class="font-bold bg-[#21142cf5] text-gray-800 mx-52">
+<body class="font-bold bg-[#21142cf5] text-gray-800 mx-52 font-corrier">
     <img src="../assets/star-purple-background.jpg" alt="Background Image" class="absolute inset-0 w-full h-full object-cover opacity-10 -z-1">
-    <main>
+    
+    <main id="app">
         <section>
             <div class="font-bold text-3xl text-center m-10 text-white">
                 <h1 class="mb-5">Bubble Sort</h1>
-                <h1 class="mb-3"> Unsorted Array - {{ randomArray }}</h1>
-                <h1> Sorted Array - {{ sortedArray }}</h1>
+                <h1 class="mb-3">Unsorted Array - {{ randomArray }}</h1>
+                <h1>Sorted Array - {{ sortedArray }}</h1>
             </div>
 
             <div class="flex flex-row justify-around items-center text-white text-3xl my-72">
-                <div class="flex justify-center align-center text-white border-3 border-solid border-white/80 rounded-[50%] p-16 shadow-lg shadow-purple-500/40 w-[200px] h-[180px] hover:shadow-2xl duration-300" v-for="(num, index) in randomArray" :key="index" :id="'Div' + index">
-                    {{ num }}</div>
-                <div id="bubble circle" class="absolute border-3 border-solid border-red-600 rounded-[50%] p-32 w-[600px] h-[350px] -left-45 translate-x-3/4" v-if="randomArray.length"></div>
-                
+                <div class="flex justify-center items-center text-white border-2 border-white border-solid rounded-full p-24 w-36 h-36 transition-transform duration-500 ease-in-out bg-[#352e4d]"
+                    v-for="(num, index) in randomArray" :key="index" 
+                    :id="'Div' + index">
+                    {{ num }}
+                </div>
+
+                <div id="bubble circle"
+                    class="absolute border-3 border-solid border-red-600 rounded-[50%] p-32 w-[600px] h-[350px] -left-45 translate-x-3/4"
+                    v-if="randomArray.length"></div>
             </div>
             <p>Swap/Pass</p>
         </section>
 
         <section>
             <div>
-                <button @click="randomNum" class="bg-black p-5 text-white mr-10 rounded-md hover:">Generate Random Numbers</button>
+                <button @click="randomNum" class="bg-black p-5 text-white mr-10 rounded-md"> Generate Random Numbers</button>
                 <button @click="bubbleSort" v-if="randomArray.length" class="bg-black rounded-md p-5 text-white">Sort Array</button>
             </div>
         </section>
+    </main>
 
     <script src="https://unpkg.com/vue@3"></script>
     <script>
@@ -46,47 +61,58 @@
                 return {
                     randomArray: [],
                     sortedArray: [],
+                    currentPos: null
                 };
             },
 
             methods: {
-                bubbleSort() {
+                async bubbleSort() {
                     let array = this.randomArray.slice();
                     let len = array.length;
 
-                    // outer for loop to iterate through the array 
                     for (let i = 0; i < len - 1; i++) {
                         let swapped = false;
 
-                        // for loop to compare elements next to each other and swap if in wrong order.
                         for (let j = 0; j < len - i - 1; j++) {
+                            this.currentPos = j;
+                            await this.delay(400); // pause for visualization
+
                             if (array[j] > array[j + 1]) {
+                                // swap elements in the array
                                 let temp = array[j];
                                 array[j] = array[j + 1];
                                 array[j + 1] = temp;
                                 swapped = true;
-                                this.randomArray = [...array]
-                                this.delay();
+                                //update ui array re-render and swap divs
+                                this.randomArray = [...array];
+                                await this.delay(1000); 
                             }
                         }
-                        // If no elements were swapped then stop
                         if (!swapped) {
                             break;
                         }
                     }
+                    this.sortedArray = array;
+                    this.sortMove = 'Sorted!';
                 },
-
-                // Random 
+                // Generate 6 random numbers between 1 and 50
                 randomNum() {
+                    console.log("randomNum was called!");
                     this.randomArray = [];
                     while (this.randomArray.length < 6) {
                         let random = Math.floor(Math.random() * 50) + 1;
                         this.randomArray.push(random);
                     }
+                    this.sortedArray = [];
+                },
+                //create a delay
+                delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
                 }
+
             }
         }).mount('#app');
-        </script>
-    </main>
+    </script>
 </body>
+
 </html>
