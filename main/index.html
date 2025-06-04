@@ -19,28 +19,28 @@
     </script>
 </head>
 
-<body class="font-bold bg-[#21142cf5] text-gray-800 mx-52">
+<body class="font-bold bg-[#21142cf5] text-gray-800 mx-52 Courier">
     <img src="../assets/star-purple-background.jpg" alt="Background Image" class="absolute inset-0 w-full h-full object-cover opacity-10 -z-1">
     
     <main id="app">
         <section>
-            <div class="font-bold text-3xl text-center m-10 text-white">
+            <div class="font-bold text-4xl text-center m-10 text-white">
                 <h1 class="mb-5">Bubble Sort</h1>
                 <h1 class="mb-3">Unsorted Array - {{ randomArray }}</h1>
                 <h1>Sorted Array - {{ sortedArray }}</h1>
             </div>
 
-            <div class="flex flex-row justify-around items-center text-white text-3xl my-60">
+            <div class="flex flex-row justify-around items-center text-white text-6xl my-60">
 
-                <div class="flex justify-center items-center text-white border-2 border-white border-solid rounded-full p-24 w-36 h-36 transition-all duration-500 ease-in-out transform"
+                <div class="flex justify-center items-center text-white border-2 border-white border-solid rounded-full p-36 w-36 h-36 transition-all duration-500 ease-in-out transform shadow-lg shadow-cyan-500/50"
                     :class="{
                         'bg-purple-700': isComparing && (index === compareIndex || index === compareIndex + 1) && index < randomArray.length - sortProgress - 1,
                         'bg-[#352e4d]': index < randomArray.length - sortProgress - 1 && (!isComparing || (index !== compareIndex && index !== compareIndex + 1)),
-                        'bg-green-500': sortProgress >= 0 && index >= randomArray.length - sortProgress
+                        'bg-green-500': sortProgress >= 0 && index >= randomArray.length - sortProgress 
                     }"
-                    
-                    v-for="(num, index) in randomArray" :key="index" 
-                    :id="'Div' + index">
+                    v-for="(num, index) in randomArray" 
+                    :key="index" 
+                    :id="'Div' + index">          
                     {{ num }}
                 </div>
 
@@ -54,12 +54,22 @@
 
 
         <section>
-            <div>
-                <p class="text-white text-3xl">Swap</p>
-                <button @click="randomNum" class="bg-transparent border-2 border-white p-5 text-white mr-10 rounded-4xl text-xl"> Generate Random Numbers</button>
-                <button @click="bubbleSort" v-if="!isRunning" class="bg-transparent border-2 border-white  p-5 text-white mr-10 rounded-4xl text-xl">Sort Array</button>
-                <label for="speedSlider">
-                <input name="speedSlider" type="range" class="">
+            <div class="flex flex-row justify-center items-center m-20">
+                <p class="text-white text-3xl justify-center">Swap</p>
+            </div>
+
+            <div class="flex flex-row gap-10 justify-center items-center">
+                <button @click="randomNum" class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer"> Generate Random Numbers</button>
+                <button @click="bubbleSort" v-if="randomArray.length" class="bg-transparent border-2 border-white  p-5 text-white mr-10 rounded-4xl text-xl cursor-pointer">Sort Array</button>
+                <div class="flex flex-col text-xl" v-if="randomArray.length">
+                    <label for="speedSlider" class="block mb-2 text-white mb-3">Speed Slider</label>
+                    <div class="flex flex-row justify-between">
+                        <label for="speedSlider" class="block mb-2 text-white mb-3">Fast</label>
+                        <label for="speedSlider" class="block mb-2 text-white mb-3 text">Slow</label>
+                    </div>
+                    <input id="speedSlider" name="speedSlider" type="range" min="100" max="1000" step="10" v-model="delaySpeed" class="h-3 w-52 bg-black/50 rounded-full appearance-none cursor-pointer"/>
+                </div>
+                <button @click="reset" v-if="randomArray.length" class="bg-transparent border-2 border-white  p-5 text-white mr-10 rounded-4xl text-xl cursor-pointer">Reset</button>
             </div>
         </section>
     </main>
@@ -74,10 +84,11 @@
                     randomArray: [],
                     sortedArray: [],
                     currentPos: null,
+                    positions: [],
                     compareIndex: -1,
                     isComparing: false,
                     sortProgress: -1,
-                    isRunning: false
+                    delaySpeed: 600
                 }
             },
 
@@ -95,7 +106,7 @@
                             this.compareIndex = j;
                             this.isComparing = true;
                             // pause to update the bg colors
-                            await this.delay(600);
+                            await this.delay(this.delaySpeed);
 
                             if (array[j] > array[j + 1]) {
                                 // swap elements in the array
@@ -105,11 +116,11 @@
                                 swapped = true;
                                 //update ui array re-render and swap divs
                                 this.randomArray = [...array];
-                                await this.delay(1000); 
+                                await this.delay(this.delaySpeed); 
                             }
                             this.isComparing = false;
                             this.sortProgress = i;
-                            await this.delay(600);
+                            await this.delay(this.delaySpeed);
                         }
                         if (!swapped) {
                             break;
@@ -125,6 +136,7 @@
                         let random = Math.floor(Math.random() * 50) + 1;
                         this.randomArray.push(random);
                     }
+                    this.positions = this.randomArray.map((_, index) => index);
                     this.sortedArray = [];
                     this.isComparing = false;
                 },
