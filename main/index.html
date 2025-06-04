@@ -11,7 +11,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        corrier: ['"Courier New"', 'Courier', 'monospace'],
+                        courier: ['Courier', 'monospace'],
                     }
                 }
             }
@@ -19,7 +19,7 @@
     </script>
 </head>
 
-<body class="font-bold bg-[#21142cf5] text-gray-800 mx-52 font-corrier">
+<body class="font-bold bg-[#21142cf5] text-gray-800 mx-52">
     <img src="../assets/star-purple-background.jpg" alt="Background Image" class="absolute inset-0 w-full h-full object-cover opacity-10 -z-1">
     
     <main id="app">
@@ -30,24 +30,36 @@
                 <h1>Sorted Array - {{ sortedArray }}</h1>
             </div>
 
-            <div class="flex flex-row justify-around items-center text-white text-3xl my-72">
-                <div class="flex justify-center items-center text-white border-2 border-white border-solid rounded-full p-24 w-36 h-36 transition-transform duration-500 ease-in-out bg-[#352e4d]"
+            <div class="flex flex-row justify-around items-center text-white text-3xl my-60">
+
+                <div class="flex justify-center items-center text-white border-2 border-white border-solid rounded-full p-24 w-36 h-36 transition-all duration-500 ease-in-out transform"
+                    :class="{
+                        'bg-purple-700': isComparing && (index === compareIndex || index === compareIndex + 1) && index < randomArray.length - sortProgress - 1,
+                        'bg-[#352e4d]': index < randomArray.length - sortProgress - 1 && (!isComparing || (index !== compareIndex && index !== compareIndex + 1)),
+                        'bg-green-500': sortProgress >= 0 && index >= randomArray.length - sortProgress
+                    }"
+                    
                     v-for="(num, index) in randomArray" :key="index" 
                     :id="'Div' + index">
                     {{ num }}
                 </div>
 
-                <div id="bubble circle"
-                    class="absolute border-3 border-solid border-red-600 rounded-[50%] p-32 w-[600px] h-[350px] -left-45 translate-x-3/4"
-                    v-if="randomArray.length"></div>
+                <!-- <div id="bubble-circle"
+                    class="absolute border-3 border-solid border-red-600 rounded-[50%] p-32 w-[500px] h-[350px] translate-x-3/4 transition-all duration-500"
+                    v-if="randomArray.length"
+                    :class="isComparing ? 'left-[' + (compareIndex * 170) + 'px]' : '-left-42'">
+                </div>  -->
             </div>
-            <p>Swap/Pass</p>
         </section>
+
 
         <section>
             <div>
-                <button @click="randomNum" class="bg-black p-5 text-white mr-10 rounded-md"> Generate Random Numbers</button>
-                <button @click="bubbleSort" v-if="randomArray.length" class="bg-black rounded-md p-5 text-white">Sort Array</button>
+                <p class="text-white text-3xl">Swap</p>
+                <button @click="randomNum" class="bg-transparent border-2 border-white p-5 text-white mr-10 rounded-4xl text-xl"> Generate Random Numbers</button>
+                <button @click="bubbleSort" v-if="!isRunning" class="bg-transparent border-2 border-white  p-5 text-white mr-10 rounded-4xl text-xl">Sort Array</button>
+                <label for="speedSlider">
+                <input name="speedSlider" type="range" class="">
             </div>
         </section>
     </main>
@@ -61,21 +73,29 @@
                 return {
                     randomArray: [],
                     sortedArray: [],
-                    currentPos: null
-                };
+                    currentPos: null,
+                    compareIndex: -1,
+                    isComparing: false,
+                    sortProgress: -1,
+                    isRunning: false
+                }
             },
 
             methods: {
                 async bubbleSort() {
                     let array = this.randomArray.slice();
                     let len = array.length;
-
+                    this.sortProgress = -1;
+                    // outer loop to loop through they array untill no moves happen
                     for (let i = 0; i < len - 1; i++) {
                         let swapped = false;
-
+                        // second loop to compare each number next to eachother
                         for (let j = 0; j < len - i - 1; j++) {
                             this.currentPos = j;
-                            await this.delay(400); // pause for visualization
+                            this.compareIndex = j;
+                            this.isComparing = true;
+                            // pause to update the bg colors
+                            await this.delay(600);
 
                             if (array[j] > array[j + 1]) {
                                 // swap elements in the array
@@ -87,23 +107,26 @@
                                 this.randomArray = [...array];
                                 await this.delay(1000); 
                             }
+                            this.isComparing = false;
+                            this.sortProgress = i;
+                            await this.delay(600);
                         }
                         if (!swapped) {
                             break;
                         }
                     }
                     this.sortedArray = array;
-                    this.sortMove = 'Sorted!';
+                    this.isComparing = false;
                 },
-                // Generate 6 random numbers between 1 and 50
+                // generate 6 random numbers between 1 and 50
                 randomNum() {
-                    console.log("randomNum was called!");
                     this.randomArray = [];
                     while (this.randomArray.length < 6) {
                         let random = Math.floor(Math.random() * 50) + 1;
                         this.randomArray.push(random);
                     }
                     this.sortedArray = [];
+                    this.isComparing = false;
                 },
                 //create a delay
                 delay(ms) {
