@@ -11,6 +11,9 @@
     <img src="../assets/star-purple-background.jpg" alt="Background Image"
         class="absolute inset-0 w-full h-full object-cover opacity-10 -z-1">
 
+    <div id="particles-js"></div>
+    <script src="particles.js"></script>
+
     <main id="app" class="font-mono">
         <section>
             <div class="font-bold text-4xl text-center m-10 text-white">
@@ -21,10 +24,9 @@
 
             <div class="relative h-60 w-full flex items-center justify-center mt-30 mb-60">
                 <div v-for="(item, index) in sortItems" :key="item.id"
-                    class="absolute w-78 h-78 flex items-center justify-center border-2 border-white rounded-full transition-transform duration-500 ease-in-out shadow-lg shadow-purple-500/60 text-white text-7xl font-bold"
+                    class="absolute w-78 h-78 flex items-center justify-center border-2 border-white rounded-full transition-transform ease-in-out shadow-lg shadow-purple-500/60 text-white text-7xl font-bold hover:bg-white/20 duration-300"
                     :class="{
-                        'bg-purple-700': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1),
-                        'bg-[#352e4d]': !isComparing || (item.currentPosition !== compareIndex && item.currentPosition !== compareIndex + 1),
+                        'bg-purple-700': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1),                     
                         'bg-green-500': sortProgress >= 0 && item.currentPosition >= sortItems.length - sortProgress,
                         'z-20': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1)
                     }"
@@ -37,42 +39,44 @@
         </section>
 
         <section>
-            <div class="flex flex-row justify-center items-center m-20">
+            <div class="flex flex-col justify-center items-center mt-20 mb-24 gap-12">
                 <p class="text-white text-4xl justify-center" v-if="isSorting">
                     {{ actionMessage }}   
                 </p>
+                <p class="text-white text-2xl justify-center">
+                    Total Swaps: {{ totalSwaps }}   
+                </p>
             </div>
 
-            <div class="flex flex-row gap-16 justify-center items-center">
+            <div class="flex flex-row gap-20 justify-center items-center">
                 <button @click="randomNum"
                     class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
                     Generate Random Numbers
                 </button>
                 <button @click="bubbleSort" v-if="sortItems.length && !isSorting"
-                    class="bg-transparent border-2 border-white p-5 text-white mr-10 rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
+                    class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
                     Sort Array
                 </button>
                 <button v-if="isSorting" disabled 
-                    class="bg-gray-600 border-2 border-gray-600 p-5 text-gray-400 mr-10 rounded-4xl text-xl cursor-not-allowed">
+                    class="bg-gray-600 border-2 border-gray-600 p-5 text-gray-400 rounded-4xl text-xl cursor-not-allowed">
                     Sorting...
                 </button>
-
-                <div class="flex flex-col text-xl" v-if="sortItems.length">
-                    <label for="speedSlider" class="block mb-2 text-white mb-3">Speed Control</label>
-                    <div class="flex flex-row justify-between">
-                        <label class="text-white mb-3">Fast</label>
-                        <label class="text-white mb-3">Slow</label>
-                    </div>
-                    <input id="speedSlider" name="speedSlider" type="range" min="0" max="1600" step="10"
-                        v-model="delaySpeed"
-                        class="h-6 w-64 px-1.5 bg-white rounded-full appearance-none cursor-pointer">
-                </div>
 
                 <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors" 
                     v-if="sortItems.length" 
                     @click="resetSort">
                     Reset
                 </button>
+                <div class="flex flex-col text-xl" v-if="sortItems.length">
+                    <label for="speedSlider" class="block mb-2 text-white mb-3">Speed Control</label>
+                    <div class="flex flex-row justify-between">
+                        <label class="text-white mb-3">Fast</label>
+                        <label class="text-white mb-3">Slow</label>
+                    </div>
+                    <input id="speedSlider" name="speedSlider" type="range" min="0" max="1800" step="10"
+                        v-model="delaySpeed"
+                        class="h-1 w-64 bg-white rounded-full appearance-none cursor-pointer">
+                </div>             
             </div>
         </section>
     </main>
@@ -90,7 +94,8 @@
                     sortProgress: -1,
                     delaySpeed: 600,
                     isSorting: false,
-                    actionMessage: ''
+                    actionMessage: '',
+                    totalSwaps: 0
                 }
             },
             methods: {
@@ -116,15 +121,17 @@
                             // get items at visual positions j and j+1
                             let leftItem = this.sortItems.find(item => item.currentPosition === j);
                             let rightItem = this.sortItems.find(item => item.currentPosition === j + 1);
-
-                            this.actionMessage = `${leftItem.value} is ${leftItem.value > rightItem.value ? 'greater' : 'not greater'} than ${rightItem.value}${leftItem.value > rightItem.value ? ' - swapped' : ''}`;
-
+                            //update action message
+                            this.actionMessage = `${leftItem.value} is ${leftItem.value > rightItem.value ? 'greater' : 'not greater'} than 
+                            ${rightItem.value}${leftItem.value > rightItem.value ? ' - Swapped' : ' - Not Swapped'}`;
+                            //check to see if numbers need swapping
                             if (leftItem.value > rightItem.value) {
                                 //swap positons
                                 [leftItem.currentPosition, rightItem.currentPosition] = 
                                 [rightItem.currentPosition, leftItem.currentPosition];
                                 swapped = true;
                                 await this.delay(this.delaySpeed);
+                                this.totalSwaps++;
                             }
                             this.isComparing = false;
                             await this.delay(200);
@@ -171,6 +178,7 @@
                     this.sortProgress = -1;
                     this.delaySpeed = 600;
                     this.isSorting = false;
+                    this.totalSwaps = null;
                 }
             }
         }).mount('#app');
