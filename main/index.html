@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bubble Sort!</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -12,10 +12,10 @@
     <main id="app" class="font-mono">
         <section>
             <div class="font-bold text-4xl text-center mt-4 text-white">
-                <h1 class="mb-5">Bubble Sort</h1>
+                <h1>Bubble Sort</h1>
             </div>
 
-            <div class="relative h-[500px] w-full flex items-center justify-center mt-20 mb-60">
+            <div class="relative h-[500px] w-full flex items-center justify-center 2xl:4 mb-60 max-[1921px]:scale-70 max-[1921px]:scale-72 max-2xl:scale-60">
                 <!-- sortItems are sorted visually by currentPosition -->
                 <div v-for="(item, index) in sortItems" :key="item.id"
                 class="absolute w-68 h-68 flex items-center justify-center border-3 border-white rounded-full transition-transform ease-in-out shadow-lg shadow-white/50 inset-shadow-purple-950 inset-shadow-sm text-white text-7xl font-bold hover:bg-white/10 duration-300"
@@ -32,7 +32,7 @@
             </div>
         </section>
 
-        <section>
+        <section class="sticky bottom-0 max-[1921px]:scale-90 max-2xl:scale-100 max-2xl:scale-100">
             <div class="flex flex-col justify-center items-center mt-82 mb-12 gap-12">
                 <p class="text-white text-4xl justify-center" v-if="isSorting">
                     {{ actionMessage }}
@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-row gap-20 justify-center items-center mb-10">
+            <div class="flex flex-row gap-20 justify-center items-center mb-1">
                 <button @click="randomNum"
                     class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%]">
                     Generate Random Numbers
