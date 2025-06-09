@@ -11,7 +11,7 @@
     <img src="../assets/star-purple-background.jpg" alt="Background Image"
         class="absolute inset-0 w-full h-full object-cover opacity-10 -z-1">
 
-    <main id="app">
+    <main id="app" class="font-mono">
         <section>
             <div class="font-bold text-4xl text-center m-10 text-white">
                 <h1 class="mb-5">Bubble Sort</h1>
@@ -21,15 +21,15 @@
 
             <div class="relative h-60 w-full flex items-center justify-center mt-30 mb-60">
                 <div v-for="(item, index) in sortItems" :key="item.id"
-                    class="absolute w-72 h-72 flex items-center justify-center border-2 border-white rounded-full transition-transform duration-500 ease-in-out shadow-lg shadow-purple-500/60 text-white text-6xl font-bold"
+                    class="absolute w-78 h-78 flex items-center justify-center border-2 border-white rounded-full transition-transform duration-500 ease-in-out shadow-lg shadow-purple-500/60 text-white text-7xl font-bold"
                     :class="{
-                        'bg-purple-900': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1),
+                        'bg-purple-700': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1),
                         'bg-[#352e4d]': !isComparing || (item.currentPosition !== compareIndex && item.currentPosition !== compareIndex + 1),
                         'bg-green-500': sortProgress >= 0 && item.currentPosition >= sortItems.length - sortProgress,
                         'z-20': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1)
                     }"
                     :style="{ 
-                        transform: `translateX(${(item.currentPosition - (sortItems.length - 1) / 2) * 300}px)`
+                        transform: `translateX(${(item.currentPosition - (sortItems.length - 1) / 2) * 340}px)`
                     }">
                     {{ item.value }}
                 </div>
@@ -38,10 +38,12 @@
 
         <section>
             <div class="flex flex-row justify-center items-center m-20">
-                <p class="text-white text-3xl justify-center">Animated Bubble Sort</p>
+                <p class="text-white text-4xl justify-center" v-if="isSorting">
+                    {{ actionMessage }}   
+                </p>
             </div>
 
-            <div class="flex flex-row gap-10 justify-center items-center">
+            <div class="flex flex-row gap-16 justify-center items-center">
                 <button @click="randomNum"
                     class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
                     Generate Random Numbers
@@ -61,10 +63,16 @@
                         <label class="text-white mb-3">Fast</label>
                         <label class="text-white mb-3">Slow</label>
                     </div>
-                    <input id="speedSlider" name="speedSlider" type="range" min="0" max="1500" step="10"
+                    <input id="speedSlider" name="speedSlider" type="range" min="0" max="1600" step="10"
                         v-model="delaySpeed"
-                        class="h-6 w-64 px-1.5 bg-white rounded-full appearance-none cursor-pointer" />
+                        class="h-6 w-64 px-1.5 bg-white rounded-full appearance-none cursor-pointer">
                 </div>
+
+                <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors" 
+                    v-if="sortItems.length" 
+                    @click="resetSort">
+                    Reset
+                </button>
             </div>
         </section>
     </main>
@@ -81,12 +89,13 @@
                     isComparing: false,
                     sortProgress: -1,
                     delaySpeed: 600,
-                    isSorting: false
+                    isSorting: false,
+                    actionMessage: ''
                 }
             },
             methods: {
                 getCurrentArray() {
-                    // return the current visual order of the array
+                    //returns current visual order of the array
                     return [...this.sortItems]
                         .sort((a, b) => a.currentPosition - b.currentPosition)
                         .map(item => item.value);
@@ -96,9 +105,10 @@
                     this.isSorting = true;
                     this.sortProgress = -1;
                     let len = this.sortItems.length;
-                    
+                    // outer loop for iterating over the array 
                     for (let i = 0; i < len - 1; i++) {
                         let swapped = false;
+                        // inner loop to iterate and compare each number
                         for (let j = 0; j < len - i - 1; j++) {
                             this.compareIndex = j;
                             this.isComparing = true;
@@ -107,8 +117,10 @@
                             let leftItem = this.sortItems.find(item => item.currentPosition === j);
                             let rightItem = this.sortItems.find(item => item.currentPosition === j + 1);
 
+                            this.actionMessage = `${leftItem.value} is ${leftItem.value > rightItem.value ? 'greater' : 'not greater'} than ${rightItem.value}${leftItem.value > rightItem.value ? ' - swapped' : ''}`;
+
                             if (leftItem.value > rightItem.value) {
-                                // swap their positions
+                                //swap positons
                                 [leftItem.currentPosition, rightItem.currentPosition] = 
                                 [rightItem.currentPosition, leftItem.currentPosition];
                                 swapped = true;
@@ -150,6 +162,16 @@
                 delay(ms) {
                     return new Promise(res => setTimeout(res, ms));
                 }, 
+
+                resetSort(){
+                    this.sortItems = [];
+                    this.sortedArray = [];
+                    this.compareIndex =  -1;
+                    this.isComparing = false;
+                    this.sortProgress = -1;
+                    this.delaySpeed = 600;
+                    this.isSorting = false;
+                }
             }
         }).mount('#app');
     </script>
