@@ -34,7 +34,7 @@
 
         <section class="sticky bottom-0 max-[1921px]:scale-90 max-2xl:scale-100 max-2xl:scale-100">
             <div class="flex flex-col justify-center items-center mt-82 mb-12 gap-12">
-                <p class="text-white text-4xl justify-center" v-if="isSorting">
+                <p class="text-white text-4xl justify-center max-[1921px]:text-2xl" v-if="isSorting">
                     {{ actionMessage }}
                 </p>
                 <div class="flex flex-row justify-center items-center gap-28">
@@ -49,6 +49,7 @@
 
             <div class="flex flex-row gap-20 justify-center items-center mb-1 max-2xl:gap-12">
                 <button @click="randomNum"
+                    v-if="!isSorting"
                     class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%]">
                     Generate Random Numbers
                 </button>
