@@ -7,18 +7,28 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
+<!-- bg-[#002744] -->
 <body class="font-bold bg-[#002744] text-gray-800 mx-52 font-courier">
+    <div id="particles-js" class="absolute top-0 left-0 w-full h-full -z-10"></div>  <!-- Background particles effect -->
+    <!-- Hide the element ttemplates compiled by Vue.js -->
+    <style>
+    [v-cloak] {
+        display: none;
+    }
+    </style>
 
-    <main id="app" class="font-mono">
-        <section>
+    <main id="app" class="font-mono" v-cloak>
+        <section> <!-- top content - header and bubbles -->
             <div class="font-bold text-4xl text-center mt-4 text-white">
                 <h1>Bubble Sort</h1>
             </div>
 
-            <div class="relative h-[500px] w-full flex items-center justify-center 2xl:4 mb-60 max-[1921px]:scale-70 max-[1921px]:scale-72 max-2xl:scale-60">
+            <div class="relative h-[500px] w-full flex items-center justify-center 2xl:4 mb-60 max-[2100px]:scale-90 max-[1920px]:scale-70 max-2xl:scale-60 max-xl:scale-50">
                 <!-- sortItems are sorted visually by currentPosition -->
                 <div v-for="(item, index) in sortItems" :key="item.id"
-                class="absolute w-68 h-68 flex items-center justify-center border-3 border-white rounded-full transition-transform ease-in-out shadow-lg shadow-white/50 inset-shadow-purple-950 inset-shadow-sm text-white text-7xl font-bold hover:bg-white/10 duration-300"
+                class="absolute w-68 h-68 flex items-center justify-center border-3 border-white rounded-full transition-transform ease-in-out shadow-lg 
+                shadow-white/50 text-white text-7xl font-bold hover:bg-white/10 duration-300 hover:scale-[101%] cursor-pointer bg-[#002744]"
+
                 :class="{
                     'bg-purple-700': isComparing && (item.currentPosition === compareIndex || item.currentPosition === compareIndex + 1),
                     'bg-green-500': sortProgress >= 0 && item.currentPosition >= sortItems.length - sortProgress,
@@ -34,7 +44,7 @@
 
         <section class="sticky bottom-0 max-[1921px]:scale-90 max-2xl:scale-100 max-2xl:scale-100">
             <div class="flex flex-col justify-center items-center mt-82 mb-12 gap-12">
-                <p class="text-white text-4xl justify-center max-[1921px]:text-2xl" v-if="isSorting">
+                <p class="text-white text-4xl justify-center max-[1920px]:text-2xl" v-if="isSorting">
                     {{ actionMessage }}
                 </p>
                 <div class="flex flex-row justify-center items-center gap-28">
@@ -46,29 +56,30 @@
                     </p> 
                 </div>
             </div>
-
+            
+            <!-- user buttons and controls -->
             <div class="flex flex-row gap-20 justify-center items-center mb-1 max-2xl:gap-12">
                 <button @click="randomNum"
                     v-if="!isSorting"
-                    class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%]">
+                    class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%] min-w-36">
                     Generate Random Numbers
                 </button>
                 <button @click="bubbleSort" v-if="sortItems.length && !isSorting"
-                    class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%]">
+                    class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%] min-w-30">
                     Sort Array
                 </button>
                 <button v-if="isSorting" disabled
-                    class="bg-gray-600 border-2 border-gray-600 p-5 text-gray-400 rounded-4xl text-xl cursor-not-allowed w-[14%]">
+                    class="bg-gray-600 border-2 border-gray-600 p-5 text-gray-400 rounded-4xl text-xl cursor-not-allowed w-[14%] min-w-40">
                     Sorting...
                 </button>
 
-                <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%]"
+                <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors w-[14%] min-w-28"
                     v-if="sortItems.length" @click="resetSort">
                     Reset
                 </button>
 
                 <div class="flex flex-col text-xl" v-if="sortItems.length">
-                    <label for="speedSlider" class="block mb-2 text-white mb-3">Speed Control - {{ Math.round(delaySpeed/1800 * 100) }}%</label>
+                    <label for="speedSlider" class="block mb-2 text-white mb-3">Speed Control - {{ 100 - Math.round(delaySpeed / 1800 * 100) }}%</label>
 
                     <div class="flex flex-row justify-between">
                         <label class="text-white mb-3">Slow</label>
@@ -80,7 +91,7 @@
                 </div>
 
                 <div class="flex flex-col items-center gap-4 justify-center mb-8 text-white" v-if="sortItems.length && !isSorting" disabled>
-                    <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors"
+                    <button class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors min-w-30"
                         @click="arrayEdit = !arrayEdit">
                         Edit Numbers
                     </button>
@@ -89,7 +100,7 @@
                         <button
                             @click="arrayLength = Math.max(5, arrayLength - 1); randomNum()"
                             class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
-                            ➖
+                            -
                         </button>
 
                         <p class="text-xl">{{ arrayLength }} numbers</p>
@@ -97,7 +108,7 @@
                         <button
                             @click="arrayLength = Math.min(12, arrayLength + 1); randomNum()"
                             class="bg-transparent border-2 border-white p-5 text-white rounded-4xl text-xl cursor-pointer hover:bg-white hover:text-purple-700 transition-colors">
-                            ➕
+                            +
                         </button>
                     </div>
                 </div>
@@ -122,7 +133,8 @@
                 totalSwaps: 0,
                 totalCompares: 0,
                 arrayEdit: false,
-                arrayLength: 12
+                arrayLength: 12,
+                cancelSort: false
             }
         },
         methods: {
@@ -136,35 +148,57 @@
             async bubbleSort() {
                 this.isSorting = true;
                 this.sortProgress = -1;
+                this.cancelSort = false;
                 let len = this.sortItems.length;
                 // outer loop for iterating over the array 
                 for (let i = 0; i < len - 1; i++) {
+                    if (this.cancelSort) {
+                        this.isSorting = false;
+                        return;
+                    }
+
                     let swapped = false;
                     // inner loop to iterate and compare each number
                     for (let j = 0; j < len - i - 1; j++) {
-                    this.compareIndex = j;
-                    this.isComparing = true;
-                    this.totalCompares++;
-                    await this.delay(this.delaySpeed);
-                    // get items at visual positions j and j+1
-                    let leftItem = this.sortItems.find(item => item.currentPosition === j);
-                    let rightItem = this.sortItems.find(item => item.currentPosition === j + 1);
-                    // update action message
-                    this.actionMessage = `${leftItem.value} is ${leftItem.value > rightItem.value ? 'greater' : 'not greater'} than 
-                    ${rightItem.value}${leftItem.value > rightItem.value ? ' - Swapped' : ' - Not Swapped'}`;
-                    // check to see if numbers need swapping
-                    if (leftItem.value > rightItem.value) {
-                        // swap positions
-                        [leftItem.currentPosition, rightItem.currentPosition] =
-                        [rightItem.currentPosition, leftItem.currentPosition];
-                        swapped = true;
+                        if (this.cancelSort) {
+                            this.isSorting = false;
+                            return;
+                        }
+                        this.compareIndex = j;
+                        this.isComparing = true;
+                        this.totalCompares++;
                         await this.delay(this.delaySpeed);
-                        this.totalSwaps++;
+
+                        if (this.cancelSort) {
+                            this.isSorting = false;
+                            return;
+                        }
+                        // get items at visual positions j and j+1
+                        let leftItem = this.sortItems.find(item => item.currentPosition === j);
+                        let rightItem = this.sortItems.find(item => item.currentPosition === j + 1);
+
+                        // update action message
+                        this.actionMessage = `${leftItem.value} is ${leftItem.value > rightItem.value ? 'greater' : 'not greater'} than 
+                        ${rightItem.value}${leftItem.value > rightItem.value ? ' - Swapped' : ' - Not Swapped'}`;
+
+                        // check to see if numbers need swapping
+                        if (leftItem.value > rightItem.value) {
+                            // swap positions
+                            [leftItem.currentPosition, rightItem.currentPosition] =
+                            [rightItem.currentPosition, leftItem.currentPosition];
+
+                            swapped = true;
+
+                            await this.delay(this.delaySpeed);
+                            this.totalSwaps++;
+                        }
+
+                        this.isComparing = false;
+                        await this.delay(200);
                     }
-                    this.isComparing = false;
-                    await this.delay(200);
-                    }
+
                     this.sortProgress = i + 1;
+
                     if (!swapped) break;
                 }
 
@@ -173,11 +207,15 @@
                 this.isSorting = false;
             },
 
+
+            // generates randon numbers and add to sortItems
             randomNum() {
+                
+                this.cancelSort = true;
                 this.sortItems = [];
                 let numbers = [];
                 while (numbers.length < this.arrayLength) {
-                    let random = Math.floor(Math.random() * 50) + 1;
+                    let random = Math.floor(Math.random() * 100) + 1;
                     numbers.push(random);
                 }
 
@@ -210,9 +248,38 @@
                 this.isSorting = false;
                 this.totalSwaps = 0;
                 this.totalCompares = 0;
+                this.cancelSort = true;
             }
         }
     }).mount('#app');
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+            number: { value: 20 },
+            color: { value: '#cfcfcf' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.3 },
+            size: { value: 1 },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#ffffff',
+                opacity: 0.3,
+                width: 1
+            },
+            move: { enable: true, speed: 2 }
+            },
+            interactivity: {
+            events: {
+                onhover: { enable: true, mode: 'repulse' }
+            }
+            },
+            retina_detect: true
+        });
     </script>
 </body>
 </html>
